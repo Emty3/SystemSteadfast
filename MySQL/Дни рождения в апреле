@@ -1,0 +1,20 @@
+USE USE hr_birthdays;
+
+SELECT 
+    full_name AS Имя,
+    birth_date AS Дата_рождения,
+    TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS Возраст, -- Считаем возраст
+    email AS Email_для_поздравления,
+    department AS Отдел,
+    CASE 
+        WHEN DAY(birth_date) < DAY(CURDATE()) THEN 'Уже был'
+        WHEN DAY(birth_date) = DAY(CURDATE()) THEN 'СЕГОДНЯ!'
+        ELSE 'Скоро будет'
+    END AS Статус
+FROM employees
+WHERE 
+    -- Условие 1: Месяц рождения совпадает с текущим месяцем
+    MONTH(birth_date) = MONTH(CURDATE())
+    -- Условие 2: Сотрудник активен (если бы было такое поле, но тут все активны)
+ORDER BY 
+    DAY(birth_date) ASC; -- Сортируем по числу месяца (кто раньше в месяце родился)
